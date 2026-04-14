@@ -195,6 +195,13 @@ main{position:relative;z-index:1;width:min(760px,94vw);margin:0 auto;padding:48p
 }
 .result-match span{color:var(--gold);font-weight:700;font-size:18px}
 
+.result-desc{
+  margin-top:12px;
+  font-size:13px;
+  color:var(--ink2);
+  line-height:1.7;
+}
+
 .result-bar-wrap{padding:20px 28px;border-bottom:1px solid var(--stroke);background:rgba(0,0,0,0.2)}
 .result-bar-label{font-size:11px;letter-spacing:2px;color:var(--ink3);margin-bottom:6px;font-family:'Bebas Neue',sans-serif}
 .result-bar-track{height:6px;background:var(--stroke2);border-radius:4px;overflow:hidden}
@@ -258,6 +265,7 @@ main{position:relative;z-index:1;width:min(760px,94vw);margin:0 auto;padding:48p
           <div class="result-label">YOUR PLAYER TYPE</div>
           <div class="result-name" id="res-name">—</div>
           <div class="result-match">匹配度 <span id="res-pct">—</span></div>
+          <div class="result-desc" id="res-desc"></div>
         </div>
         <div class="result-bar-wrap">
           <div class="result-bar-label">MATCH SCORE</div>
@@ -306,26 +314,157 @@ const QUESTIONS = [
 
 // ── 选手原型（10维：E R T M C S K P D G）────────────────────────────
 const PLAYERS = [
-  {name:"zmjjkk",  code:[2,2,1,2,1, 2,2,0,1,1]},
-  {name:"life",    code:[2,2,0,2,0, 2,1,0,0,1]},
-  {name:"demon1",  code:[2,2,1,2,1, 1,2,0,0,0]},
-  {name:"aspas",   code:[1,0,1,1,2, 0,0,2,2,1]},
-  {name:"Derke",   code:[1,0,1,2,2, 0,0,1,2,0]},
-  {name:"Boaster", code:[0,0,2,1,2, 2,2,0,1,2]},
-  {name:"Chronicle",code:[0,0,2,1,2, 0,0,1,2,1]},
-  {name:"TenZ",    code:[2,1,2,1,1, 2,0,1,2,0]},
-  {name:"nAts",    code:[0,0,1,0,2, 0,0,2,1,2]},
-  {name:"Alfajer", code:[1,0,2,1,2, 0,0,1,2,0]},
-  {name:"Sayf",    code:[2,2,0,2,1, 1,1,0,1,0]},
-  {name:"SUYGETSU",code:[0,1,2,1,2, 0,0,1,1,2]},
-  {name:"Zekken",  code:[2,2,0,2,1, 1,1,0,1,1]},
-  {name:"qw1",     code:[2,2,0,2,0, 1,1,0,0,0]},
-  {name:"Shao",    code:[0,0,2,0,2, 0,0,2,1,1]},
-  {name:"KiNGG",   code:[0,0,2,1,1, 0,0,1,2,0]},
-  {name:"BuZz",    code:[2,1,1,2,1, 1,1,1,1,1]},
-  {name:"CHICHOO", code:[0,0,2,1,2, 0,0,1,2,1]},
-  {name:"Whzy",    code:[2,1,1,2,1, 1,1,1,1,0]},
-  {name:"Cryo",    code:[2,2,0,2,0, 1,2,0,0,0]},
+  {
+    name: "zmjjkk",
+    desc: "康康·世界冠军破纪录的入场机器。Champions 2024 MVP，Bo5 111 杀历史纪录保持者。Jett / Neon 激进抢一枪，风险与回报并存，是中国区诞生的第一位真正意义上的全球超巨。",
+    code: [2,2,1,2,1, 2,2,0,1,1],
+  },
+  {
+    name: "life",
+    desc: "EDG 时代的低调哨兵型选手。不追求高光，靠稳定防守和道具价值撑起队伍结构，是少言寡语却不可或缺的那块拼图。",
+    code: [2,2,0,2,0, 2,1,0,0,1],
+  },
+  {
+    name: "demon1",
+    desc: "NA 最具杀伤力的入场手之一。Champions 2023 MVP，Jett 无畏冲点、追踪式瞄准是噩梦级体验，手感爆发时几乎没有人能正面接住他。",
+    code: [2,2,1,2,1, 1,2,0,0,0],
+  },
+  {
+    name: "aspas",
+    desc: "被普遍认为是史上最强 Duelist 之一的巴西超人。连续多年稳居全球顶尖，单图 47 杀破纪录，35% 残局胜率，用一己之力把 LATAM 区送上世界舞台。",
+    code: [1,0,1,1,2, 0,0,2,2,1],
+  },
+  {
+    name: "Derke",
+    desc: "EMEA 最精准的狙击手之一，Operator 操控大师。Fnatic 多年来的第一枪担当，冷静、精确、高产，是欧洲 Duelist 的标杆级人物。",
+    code: [1,0,1,2,2, 0,0,1,2,0],
+  },
+  {
+    name: "Boaster",
+    desc: "Fnatic 的灵魂指挥官与话题制造机。场上战术创新、残局调整一流；场外梗图主角、赛后采访永远最有节目效果，是 VCT 人气最高的 IGL。",
+    code: [0,0,2,1,2, 2,2,0,1,2],
+  },
+  {
+    name: "Chronicle",
+    desc: "被誉为史上最强 Sentinel 之一。防守极度冷静，道具架设无懈可击，是 Fnatic 体系能够成立的基石，低调但数据和胜率都会说话。",
+    code: [0,0,2,1,2, 0,0,1,2,1],
+  },
+  {
+    name: "TenZ",
+    desc: "无畏契约最具文化影响力的选手，没有之一。超凡的机械操作让他成为 VCT 的门面人物，主播、内容创作者、职业选手三位一体，影响力早已超出竞技本身。",
+    code: [2,1,2,1,1, 2,0,1,2,0],
+  },
+  {
+    name: "nAts",
+    desc: "\"鼠王\"。Team Liquid 的 IGL 兼战术核心，以 Cypher / Viper 游走侧翼、绕后偷袭享誉全球，越是关键局越是冰冷，是等待型战术选手的极致代表。",
+    code: [0,0,2,0,2, 1,0,2,2,2],
+  },
+  {
+    name: "Alfajer",
+    desc: "Fnatic 最稳定的防守基石，年龄最小却判断最老成的那类选手。哨兵位置无可撼动，读图和站位远超同龄人，是欧洲下一代的定海神针。",
+    code: [1,0,2,1,2, 0,0,1,2,0],
+  },
+  {
+    name: "Sayf",
+    desc: "攻守均衡的全能型选手，适应性极强。无论打什么 Agent、什么战术体系都能快速融入，是队伍需要弹性时最可靠的那张牌。",
+    code: [2,2,0,2,1, 1,1,0,1,0],
+  },
+  {
+    name: "SUYGETSU",
+    desc: "安静、高效、致命。不靠高光片段建立声望，用稳定的 KD 和精准的出枪时机说话，是典型的\"成绩好但观众感知低\"的顶尖选手。",
+    code: [0,1,2,1,2, 0,0,1,1,2],
+  },
+  {
+    name: "Zekken",
+    desc: "Sentinels 的冲击核心，NA 最稳定的 Duelist 之一。Raze / Neon 永远在冲，Masters Madrid MVP，是 NA 新生代选手眼中的学习对象。",
+    code: [2,2,0,2,1, 1,1,0,1,1],
+  },
+  {
+    name: "qw1",
+    desc: "中国区的低调破局手，入场果断，不抢镜头，把精力全部用在队伍需要他的位置。典型的专业选手气质，成绩说话，不靠话题。",
+    code: [2,2,0,2,0, 1,1,0,0,0],
+  },
+  {
+    name: "Shao",
+    desc: "思路阴险的战术型哨兵，用位置信息差和道具设陷阱偷走回合，对手永远不知道他藏在哪里，是 nAts 型玩法的另一种版本。",
+    code: [0,0,2,0,2, 0,0,2,1,1],
+  },
+  {
+    name: "KiNGG",
+    desc: "稳定可靠的体系选手，更注重帮队伍执行战术而非个人数据，节奏稳健，不制造混乱也不依赖个人英雄主义，是团队型控场选手的代表。",
+    code: [0,0,2,1,1, 0,0,1,2,0],
+  },
+  {
+    name: "BuZz",
+    desc: "T1 的全能侧翼手，能打多个位置、多种 Agent，均衡感极强，没有明显短板。不是最耀眼的那颗星，但任何阵容里都能迅速找到自己的位置。",
+    code: [2,1,1,2,1, 1,1,1,1,1],
+  },
+  {
+    name: "CHICHOO",
+    desc: "EDG 世界冠军阵容的战术大脑。Controller 位看似低调，但烟雾架设、信息判断和整体节奏把控是 EDG 体系能成立的前提，沉默的幕后 GOAT。",
+    code: [0,0,2,1,2, 0,0,1,2,1],
+  },
+  {
+    name: "Whzy",
+    desc: "BLG 的闪光入场手，快、准、狠三字概括，Neon 快速切入是他的招牌。中国区最具爆发力的 Duelist 之一，状态好时对任何人都是噩梦。",
+    code: [2,1,1,2,1, 1,1,1,1,0],
+  },
+  {
+    name: "Cryo",
+    desc: "100 Thieves 的清醒型 Duelist，不冒险、不赌博，靠精准预瞄和稳定输出拿分。相比起激进选手，他更像一台精密运转的得分机器，不出错就是最大的贡献。",
+    code: [2,2,0,2,0, 1,2,0,0,0],
+  },
+  // ── 新增选手 ──
+  {
+    name: "SiuFatBB",
+    desc: "Wolves 的广东仔 IGL，攻守兼备、大胆又有计算，赢了回合必 taunt 是他的标志动作。带领 Wolves 杀进 Masters Toronto 季军，是中国区走向国际的新符号。",
+    code: [1,1,2,1,1, 2,2,1,2,1],
+  },
+  {
+    name: "t3xture",
+    desc: "Gen.G 的韩国 Duelist 核心，Masters Shanghai 冠军 MVP，历史 Bo5 最多击杀纪录前保持者。高强度入场、Jett / Raze 双修，状态好的时候对面基本没有正面接住他的机会。",
+    code: [2,2,1,2,1, 1,1,0,2,0],
+  },
+  {
+    name: "stax",
+    desc: "T1 的接地气 IGL，带队拿下 Masters Bangkok 首个国际冠军。比赛里情绪化领导力满分；直播里被天梯气到崩溃的样子让他成为全球最受欢迎的\"真实感\"职业选手之一。",
+    code: [1,1,2,0,1, 2,2,1,1,1],
+  },
+  {
+    name: "yay",
+    desc: "\"El Diablo\"，恶魔本人。Chamber 鼎盛时代统治全球的狙击手，极低鼠标感度配合手术刀般的精准，是 VCT 2022 年度最佳选手。冷静得让对手宁愿绕路也不愿意正面。",
+    code: [0,0,1,1,2, 1,1,2,2,1],
+  },
+  {
+    name: "Ethan",
+    desc: "VCT 史上唯一两届世界冠军（2023 EG，2025 NRG），首位总奖金超 50 万美元的选手。NRG 的 IGL，沉稳如山，逆风越稳，Initiator 位助攻数历史第一。",
+    code: [0,0,2,0,2, 1,1,1,2,1],
+  },
+  {
+    name: "Jinggg",
+    desc: "Paper Rex 的入场先锋，新加坡国宝级选手。Raze 一往无前，哪里最危险冲哪里，是 PRX\"W键打法\"最极致的体现者。服完兵役归来依然顶尖，Masters Toronto 冠军核心成员。",
+    code: [2,2,1,2,1, 1,1,0,2,0],
+  },
+  {
+    name: "kaajak",
+    desc: "Fnatic 的波兰新星，2025 EMEA 四奖包揽，35.7% 残局胜率惊人。接替 Derke 出道即顶流，自述\"零压力\"打任何官赛都像打训练赛，是最不怕大场面的新生代 Duelist。",
+    code: [2,1,1,2,2, 1,1,0,2,0],
+  },
+  {
+    name: "ScreaM",
+    desc: "\"爆头机器\"。从 CS:GO 传奇转型为 Valorant 顶尖选手，CSGO 历史最高爆头率纪录保持者。Karmine Corp 的灵魂，一枪一个头的打法和超高人气让他成为欧洲最具魅力的老将。",
+    code: [2,2,1,2,1, 2,2,0,2,0],
+  },
+  {
+    name: "jawgemo",
+    desc: "G2 的混乱制造机，Raze 背包乱炸 + Yoru 迷惑走位让对手防不胜防。38% 残局胜率，打法不按常理出牌却屡屡奏效，是 Masters Bangkok 冠军阵容里最难被对面针对的那个人。",
+    code: [2,2,1,2,1, 1,2,0,1,2],
+  },
+  {
+    name: "Leo",
+    desc: "\"沉默刺客\"。Fnatic 的隐形 MVP，Sova / Fade 道具使用炉火纯青，78% KAST 纯靠效率不靠高光。从不争头功，却是 Derke 和 Alfajer 能够为所欲为的前提。",
+    code: [0,0,2,0,2, 0,0,2,2,2],
+  },
 ];
 
 const DIMS = ["E","R","T","M","C","S","K","P","D","G"];
@@ -387,14 +526,20 @@ function calcResults(){
 }
 
 // ── render ─────────────────────────────────────────────────────────────
+function updateProgress(){
+  const n = order.length;
+  const answered = Math.min(ans.size, n);
+  const p = Math.round((answered / n) * 100);
+  document.getElementById('prog-pct').textContent = p+'%';
+  document.getElementById('prog-fill').style.width = p+'%';
+}
+
 function render(){
   const q = order[cur];
   const n = order.length;
 
   document.getElementById('prog-txt').textContent = `第 ${cur+1} / ${n} 题`;
-  const p = Math.round(((cur + 1) / n) * 100);
-  document.getElementById('prog-pct').textContent = p+'%';
-  document.getElementById('prog-fill').style.width = p+'%';
+  updateProgress();
 
   document.getElementById('q-num').textContent = 'Q'+(cur+1<10?'0':'')+(cur+1);
   document.getElementById('q-text').textContent = q.text;
@@ -413,6 +558,7 @@ function render(){
       ans.set(q.id, +el.dataset.val);
       optsEl.querySelectorAll('.opt').forEach(e=>e.classList.remove('sel'));
       el.classList.add('sel');
+      updateProgress();
     });
   });
 
@@ -429,6 +575,7 @@ function showResult(){
 
   document.getElementById('res-name').textContent = player.name;
   document.getElementById('res-pct').textContent = pct+'%';
+  document.getElementById('res-desc').textContent = player.desc || '';
 
   // bar animates after paint
   setTimeout(()=>{
