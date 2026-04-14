@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>VPTI — VCT Player Type Indicator</title>
+<title>VPTIr</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -27,8 +27,7 @@ body{
   min-height:100vh;
   overflow-x:hidden;
 }
-
-/* background grid */
+ 
 body::before{
   content:'';
   position:fixed;inset:0;
@@ -39,7 +38,7 @@ body::before{
   pointer-events:none;
   z-index:0;
 }
-
+ 
 .glow{
   position:fixed;
   width:600px;height:600px;
@@ -50,10 +49,9 @@ body::before{
   animation:drift 12s ease-in-out infinite alternate;
 }
 @keyframes drift{from{transform:translate(0,0)}to{transform:translate(80px,60px)}}
-
+ 
 main{position:relative;z-index:1;width:min(760px,94vw);margin:0 auto;padding:48px 0 80px}
-
-/* header */
+ 
 .hdr{text-align:center;margin-bottom:48px}
 .hdr-label{
   display:inline-block;
@@ -74,8 +72,7 @@ main{position:relative;z-index:1;width:min(760px,94vw);margin:0 auto;padding:48p
   margin-bottom:14px;
 }
 .hdr p{color:var(--ink2);font-size:14px;line-height:1.7;max-width:520px;margin:0 auto}
-
-/* card */
+ 
 .card{
   background:var(--panel);
   border:1px solid var(--stroke2);
@@ -88,8 +85,7 @@ main{position:relative;z-index:1;width:min(760px,94vw);margin:0 auto;padding:48p
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,rgba(232,48,64,0.6),transparent);
 }
-
-/* progress bar */
+ 
 .prog-wrap{margin-bottom:28px}
 .prog-text{
   display:flex;justify-content:space-between;
@@ -101,8 +97,7 @@ main{position:relative;z-index:1;width:min(760px,94vw);margin:0 auto;padding:48p
   height:100%;background:linear-gradient(90deg,var(--red),var(--gold));
   border-radius:2px;transition:width .4s ease;
 }
-
-/* question */
+ 
 .q-num{
   font-family:'Bebas Neue',sans-serif;
   font-size:12px;letter-spacing:3px;color:var(--red);
@@ -112,8 +107,7 @@ main{position:relative;z-index:1;width:min(760px,94vw);margin:0 auto;padding:48p
   font-size:18px;font-weight:500;color:var(--ink1);
   line-height:1.6;margin-bottom:24px;
 }
-
-/* options */
+ 
 .opts{display:grid;gap:10px;margin-bottom:28px}
 .opt{
   display:flex;align-items:flex-start;gap:12px;
@@ -130,6 +124,8 @@ main{position:relative;z-index:1;width:min(760px,94vw);margin:0 auto;padding:48p
   border-color:var(--red);
   background:rgba(232,48,64,0.08);
 }
+/* 选中后禁用点击，防止重复触发 */
+.opts.locked .opt{pointer-events:none}
 .opt-letter{
   flex-shrink:0;
   width:22px;height:22px;
@@ -143,8 +139,7 @@ main{position:relative;z-index:1;width:min(760px,94vw);margin:0 auto;padding:48p
 }
 .opt.sel .opt-letter{border-color:var(--red);color:var(--red);background:rgba(232,48,64,0.12)}
 .opt-txt{font-size:14px;color:var(--ink1);line-height:1.6}
-
-/* actions */
+ 
 .acts{display:flex;gap:10px;flex-wrap:wrap}
 .btn{
   padding:10px 22px;border-radius:8px;
@@ -163,12 +158,11 @@ main{position:relative;z-index:1;width:min(760px,94vw);margin:0 auto;padding:48p
   box-shadow:0 4px 20px rgba(232,48,64,0.3);
 }
 .btn.primary:hover{box-shadow:0 6px 28px rgba(232,48,64,0.45)}
-
-/* result */
+ 
 .result{display:none;margin-top:32px;animation:fadeUp .5s ease}
 .result.show{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-
+ 
 .result-inner{
   border:1px solid rgba(232,48,64,0.3);
   border-radius:14px;
@@ -194,19 +188,19 @@ main{position:relative;z-index:1;width:min(760px,94vw);margin:0 auto;padding:48p
   font-size:13px;color:var(--ink2);
 }
 .result-match span{color:var(--gold);font-weight:700;font-size:18px}
-
+ 
 .result-desc{
   margin-top:12px;
   font-size:13px;
   color:var(--ink2);
   line-height:1.7;
 }
-
+ 
 .result-bar-wrap{padding:20px 28px;border-bottom:1px solid var(--stroke);background:rgba(0,0,0,0.2)}
 .result-bar-label{font-size:11px;letter-spacing:2px;color:var(--ink3);margin-bottom:6px;font-family:'Bebas Neue',sans-serif}
 .result-bar-track{height:6px;background:var(--stroke2);border-radius:4px;overflow:hidden}
 .result-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--red),var(--gold));transition:width 1s ease .2s}
-
+ 
 .result-dims{
   display:grid;grid-template-columns:1fr 1fr;
   gap:1px;background:var(--stroke);
@@ -218,15 +212,24 @@ main{position:relative;z-index:1;width:min(760px,94vw);margin:0 auto;padding:48p
 .dim-cell-label{font-size:11px;color:var(--ink3);letter-spacing:1px;margin-bottom:4px}
 .dim-cell-val{font-size:13px;color:var(--ink2)}
 .dim-cell-val b{color:var(--ink1);font-weight:500}
-
+ 
 .result-footer{padding:16px 28px;text-align:center}
 .result-footer p{font-size:12px;color:var(--ink3)}
-
+ 
 .note{margin-top:24px;text-align:center;font-size:12px;color:var(--ink3)}
-
-/* transition */
+ 
 .q-wrap{transition:opacity .2s,transform .2s}
 .q-wrap.fade-out{opacity:0;transform:translateX(-12px)}
+ 
+/* 自动跳题进度提示 */
+.auto-hint{
+  font-size:12px;color:var(--ink3);
+  text-align:right;
+  margin-top:-20px;
+  margin-bottom:16px;
+  min-height:16px;
+  transition:opacity .3s;
+}
 </style>
 </head>
 <body>
@@ -237,7 +240,7 @@ main{position:relative;z-index:1;width:min(760px,94vw);margin:0 auto;padding:48p
     <h1>VPTI</h1>
     <p>25 道题，答完后匹配你最接近的 VCT 选手原型</p>
   </div>
-
+ 
   <div class="card">
     <div class="prog-wrap">
       <div class="prog-text">
@@ -246,19 +249,19 @@ main{position:relative;z-index:1;width:min(760px,94vw);margin:0 auto;padding:48p
       </div>
       <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
     </div>
-
+ 
     <div class="q-wrap" id="q-wrap">
       <div class="q-num" id="q-num">Q01</div>
       <div class="q-text" id="q-text"></div>
       <div class="opts" id="opts"></div>
+      <div class="auto-hint" id="auto-hint"></div>
     </div>
-
+ 
     <div class="acts">
       <button class="btn" id="prev-btn" disabled>上一题</button>
-      <button class="btn primary" id="next-btn">下一题</button>
       <button class="btn" id="reset-btn">重新开始</button>
     </div>
-
+ 
     <div class="result" id="result">
       <div class="result-inner">
         <div class="result-top">
@@ -277,13 +280,12 @@ main{position:relative;z-index:1;width:min(760px,94vw);margin:0 auto;padding:48p
         <div class="result-footer"><p>仅供玩梗娱乐，不代表对选手的严肃评价</p></div>
       </div>
     </div>
-
+ 
     <div class="note">仅供娱乐，不适合作为严肃人物评价</div>
   </div>
 </main>
-
+ 
 <script>
-// ── 题目 ──────────────────────────────────────────────────────────────
 const QUESTIONS = [
   {id:1,dim:"E",text:"手枪局开局，你更像：",opts:["先稳默认，等信息，不急着做第一个露头的人","跟着队友拿空间，我负责补枪","只要机会对，我愿意做第一个探路的人","我就想第一个出去接，最好开局先狠狠干一波"]},
   {id:2,dim:"R",text:"你在 1v2 时，更接近哪种处理？",opts:["先保枪位/保信息，找最稳妥的赢法","稍微等等对面犯错","有机会就主动抢 timing","不等了，直接搏一波大的"]},
@@ -311,174 +313,54 @@ const QUESTIONS = [
   {id:24,dim:"D",text:"面对考试/DDL/重要任务，你通常：",opts:["最后爆发，平时不太管","临近了才进入状态","会提前安排，不想临时乱","提前很久就开始控进度，尽量不让自己进极限局"]},
   {id:25,dim:"G",text:"玩狼人杀/推理/阵营游戏时，你更像：",opts:["正面硬聊，不藏","该聊聊，该演演","喜欢藏信息、反打别人逻辑","最享受把别人绕晕，然后自己静静收网"]},
 ];
-
-// ── 选手原型（10维：E R T M C S K P D G）────────────────────────────
+ 
 const PLAYERS = [
-  {
-    name: "zmjjkk",
-    desc: "康康·世界冠军破纪录的入场机器。Champions 2024 MVP，Bo5 111 杀历史纪录保持者。Jett / Neon 激进抢一枪，风险与回报并存，是中国区诞生的第一位真正意义上的全球超巨。",
-    code: [2,2,1,2,1, 2,2,0,1,1],
-  },
-  {
-    name: "life",
-    desc: "EDG 时代的低调哨兵型选手。不追求高光，靠稳定防守和道具价值撑起队伍结构，是少言寡语却不可或缺的那块拼图。",
-    code: [2,2,0,2,0, 2,1,0,0,1],
-  },
-  {
-    name: "demon1",
-    desc: "NA 最具杀伤力的入场手之一。Champions 2023 MVP，Jett 无畏冲点、追踪式瞄准是噩梦级体验，手感爆发时几乎没有人能正面接住他。",
-    code: [2,2,1,2,1, 1,2,0,0,0],
-  },
-  {
-    name: "aspas",
-    desc: "被普遍认为是史上最强 Duelist 之一的巴西超人。连续多年稳居全球顶尖，单图 47 杀破纪录，35% 残局胜率，用一己之力把 LATAM 区送上世界舞台。",
-    code: [1,0,1,1,2, 0,0,2,2,1],
-  },
-  {
-    name: "Derke",
-    desc: "EMEA 最精准的狙击手之一，Operator 操控大师。Fnatic 多年来的第一枪担当，冷静、精确、高产，是欧洲 Duelist 的标杆级人物。",
-    code: [1,0,1,2,2, 0,0,1,2,0],
-  },
-  {
-    name: "Boaster",
-    desc: "Fnatic 的灵魂指挥官与话题制造机。场上战术创新、残局调整一流；场外梗图主角、赛后采访永远最有节目效果，是 VCT 人气最高的 IGL。",
-    code: [0,0,2,1,2, 2,2,0,1,2],
-  },
-  {
-    name: "Chronicle",
-    desc: "被誉为史上最强 Sentinel 之一。防守极度冷静，道具架设无懈可击，是 Fnatic 体系能够成立的基石，低调但数据和胜率都会说话。",
-    code: [0,0,2,1,2, 0,0,1,2,1],
-  },
-  {
-    name: "TenZ",
-    desc: "无畏契约最具文化影响力的选手，没有之一。超凡的机械操作让他成为 VCT 的门面人物，主播、内容创作者、职业选手三位一体，影响力早已超出竞技本身。",
-    code: [2,1,2,1,1, 2,0,1,2,0],
-  },
-  {
-    name: "nAts",
-    desc: "\"鼠王\"。Team Liquid 的 IGL 兼战术核心，以 Cypher / Viper 游走侧翼、绕后偷袭享誉全球，越是关键局越是冰冷，是等待型战术选手的极致代表。",
-    code: [0,0,2,0,2, 1,0,2,2,2],
-  },
-  {
-    name: "Alfajer",
-    desc: "Fnatic 最稳定的防守基石，年龄最小却判断最老成的那类选手。哨兵位置无可撼动，读图和站位远超同龄人，是欧洲下一代的定海神针。",
-    code: [1,0,2,1,2, 0,0,1,2,0],
-  },
-  {
-    name: "Sayf",
-    desc: "攻守均衡的全能型选手，适应性极强。无论打什么 Agent、什么战术体系都能快速融入，是队伍需要弹性时最可靠的那张牌。",
-    code: [2,2,0,2,1, 1,1,0,1,0],
-  },
-  {
-    name: "SUYGETSU",
-    desc: "安静、高效、致命。不靠高光片段建立声望，用稳定的 KD 和精准的出枪时机说话，是典型的\"成绩好但观众感知低\"的顶尖选手。",
-    code: [0,1,2,1,2, 0,0,1,1,2],
-  },
-  {
-    name: "Zekken",
-    desc: "Sentinels 的冲击核心，NA 最稳定的 Duelist 之一。Raze / Neon 永远在冲，Masters Madrid MVP，是 NA 新生代选手眼中的学习对象。",
-    code: [2,2,0,2,1, 1,1,0,1,1],
-  },
-  {
-    name: "qw1",
-    desc: "中国区的低调破局手，入场果断，不抢镜头，把精力全部用在队伍需要他的位置。典型的专业选手气质，成绩说话，不靠话题。",
-    code: [2,2,0,2,0, 1,1,0,0,0],
-  },
-  {
-    name: "Shao",
-    desc: "思路阴险的战术型哨兵，用位置信息差和道具设陷阱偷走回合，对手永远不知道他藏在哪里，是 nAts 型玩法的另一种版本。",
-    code: [0,0,2,0,2, 0,0,2,1,1],
-  },
-  {
-    name: "KiNGG",
-    desc: "稳定可靠的体系选手，更注重帮队伍执行战术而非个人数据，节奏稳健，不制造混乱也不依赖个人英雄主义，是团队型控场选手的代表。",
-    code: [0,0,2,1,1, 0,0,1,2,0],
-  },
-  {
-    name: "BuZz",
-    desc: "T1 的全能侧翼手，能打多个位置、多种 Agent，均衡感极强，没有明显短板。不是最耀眼的那颗星，但任何阵容里都能迅速找到自己的位置。",
-    code: [2,1,1,2,1, 1,1,1,1,1],
-  },
-  {
-    name: "CHICHOO",
-    desc: "EDG 世界冠军阵容的战术大脑。Controller 位看似低调，但烟雾架设、信息判断和整体节奏把控是 EDG 体系能成立的前提，沉默的幕后 GOAT。",
-    code: [0,0,2,1,2, 0,0,1,2,1],
-  },
-  {
-    name: "Whzy",
-    desc: "BLG 的闪光入场手，快、准、狠三字概括，Neon 快速切入是他的招牌。中国区最具爆发力的 Duelist 之一，状态好时对任何人都是噩梦。",
-    code: [2,1,1,2,1, 1,1,1,1,0],
-  },
-  {
-    name: "Cryo",
-    desc: "100 Thieves 的清醒型 Duelist，不冒险、不赌博，靠精准预瞄和稳定输出拿分。相比起激进选手，他更像一台精密运转的得分机器，不出错就是最大的贡献。",
-    code: [2,2,0,2,0, 1,2,0,0,0],
-  },
-  // ── 新增选手 ──
-  {
-    name: "SiuFatBB",
-    desc: "Wolves 的广东仔 IGL，攻守兼备、大胆又有计算，赢了回合必 taunt 是他的标志动作。带领 Wolves 杀进 Masters Toronto 季军，是中国区走向国际的新符号。",
-    code: [1,1,2,1,1, 2,2,1,2,1],
-  },
-  {
-    name: "t3xture",
-    desc: "Gen.G 的韩国 Duelist 核心，Masters Shanghai 冠军 MVP，历史 Bo5 最多击杀纪录前保持者。高强度入场、Jett / Raze 双修，状态好的时候对面基本没有正面接住他的机会。",
-    code: [2,2,1,2,1, 1,1,0,2,0],
-  },
-  {
-    name: "stax",
-    desc: "T1 的接地气 IGL，带队拿下 Masters Bangkok 首个国际冠军。比赛里情绪化领导力满分；直播里被天梯气到崩溃的样子让他成为全球最受欢迎的\"真实感\"职业选手之一。",
-    code: [1,1,2,0,1, 2,2,1,1,1],
-  },
-  {
-    name: "yay",
-    desc: "\"El Diablo\"，恶魔本人。Chamber 鼎盛时代统治全球的狙击手，极低鼠标感度配合手术刀般的精准，是 VCT 2022 年度最佳选手。冷静得让对手宁愿绕路也不愿意正面。",
-    code: [0,0,1,1,2, 1,1,2,2,1],
-  },
-  {
-    name: "Ethan",
-    desc: "VCT 史上唯一两届世界冠军（2023 EG，2025 NRG），首位总奖金超 50 万美元的选手。NRG 的 IGL，沉稳如山，逆风越稳，Initiator 位助攻数历史第一。",
-    code: [0,0,2,0,2, 1,1,1,2,1],
-  },
-  {
-    name: "Jinggg",
-    desc: "Paper Rex 的入场先锋，新加坡国宝级选手。Raze 一往无前，哪里最危险冲哪里，是 PRX\"W键打法\"最极致的体现者。服完兵役归来依然顶尖，Masters Toronto 冠军核心成员。",
-    code: [2,2,1,2,1, 1,1,0,2,0],
-  },
-  {
-    name: "kaajak",
-    desc: "Fnatic 的波兰新星，2025 EMEA 四奖包揽，35.7% 残局胜率惊人。接替 Derke 出道即顶流，自述\"零压力\"打任何官赛都像打训练赛，是最不怕大场面的新生代 Duelist。",
-    code: [2,1,1,2,2, 1,1,0,2,0],
-  },
-  {
-    name: "ScreaM",
-    desc: "\"爆头机器\"。从 CS:GO 传奇转型为 Valorant 顶尖选手，CSGO 历史最高爆头率纪录保持者。Karmine Corp 的灵魂，一枪一个头的打法和超高人气让他成为欧洲最具魅力的老将。",
-    code: [2,2,1,2,1, 2,2,0,2,0],
-  },
-  {
-    name: "jawgemo",
-    desc: "G2 的混乱制造机，Raze 背包乱炸 + Yoru 迷惑走位让对手防不胜防。38% 残局胜率，打法不按常理出牌却屡屡奏效，是 Masters Bangkok 冠军阵容里最难被对面针对的那个人。",
-    code: [2,2,1,2,1, 1,2,0,1,2],
-  },
-  {
-    name: "Leo",
-    desc: "\"沉默刺客\"。Fnatic 的隐形 MVP，Sova / Fade 道具使用炉火纯青，78% KAST 纯靠效率不靠高光。从不争头功，却是 Derke 和 Alfajer 能够为所欲为的前提。",
-    code: [0,0,2,0,2, 0,0,2,2,2],
-  },
+  {name:"zmjjkk",desc:"康康·世界冠军破纪录的入场机器。Champions 2024 MVP，Bo5 111 杀历史纪录保持者。Jett / Neon 激进抢一枪，风险与回报并存，是中国区诞生的第一位真正意义上的全球超巨。",code:[2,2,1,2,1,2,2,0,1,1]},
+  {name:"life",desc:"EDG 时代的低调哨兵型选手。不追求高光，靠稳定防守和道具价值撑起队伍结构，是少言寡语却不可或缺的那块拼图。",code:[2,2,0,2,0,2,1,0,0,1]},
+  {name:"demon1",desc:"NA 最具杀伤力的入场手之一。Champions 2023 MVP，Jett 无畏冲点、追踪式瞄准是噩梦级体验，手感爆发时几乎没有人能正面接住他。",code:[2,2,1,2,1,1,2,0,0,0]},
+  {name:"aspas",desc:"被普遍认为是史上最强 Duelist 之一的巴西超人。连续多年稳居全球顶尖，单图 47 杀破纪录，35% 残局胜率，用一己之力把 LATAM 区送上世界舞台。",code:[1,0,1,1,2,0,0,2,2,1]},
+  {name:"Derke",desc:"EMEA 最精准的狙击手之一，Operator 操控大师。Fnatic 多年来的第一枪担当，冷静、精确、高产，是欧洲 Duelist 的标杆级人物。",code:[1,0,1,2,2,0,0,1,2,0]},
+  {name:"Boaster",desc:"Fnatic 的灵魂指挥官与话题制造机。场上战术创新、残局调整一流；场外梗图主角、赛后采访永远最有节目效果，是 VCT 人气最高的 IGL。",code:[0,0,2,1,2,2,2,0,1,2]},
+  {name:"Chronicle",desc:"被誉为史上最强 Sentinel 之一。防守极度冷静，道具架设无懈可击，是 Fnatic 体系能够成立的基石，低调但数据和胜率都会说话。",code:[0,0,2,1,2,0,0,1,2,1]},
+  {name:"TenZ",desc:"无畏契约最具文化影响力的选手，没有之一。超凡的机械操作让他成为 VCT 的门面人物，主播、内容创作者、职业选手三位一体，影响力早已超出竞技本身。",code:[2,1,2,1,1,2,0,1,2,0]},
+  {name:"nAts",desc:"\"鼠王\"。Team Liquid 的 IGL 兼战术核心，以 Cypher / Viper 游走侧翼、绕后偷袭享誉全球，越是关键局越是冰冷，是等待型战术选手的极致代表。",code:[0,0,2,0,2,1,0,2,2,2]},
+  {name:"Alfajer",desc:"Fnatic 最稳定的防守基石，年龄最小却判断最老成的那类选手。哨兵位置无可撼动，读图和站位远超同龄人，是欧洲下一代的定海神针。",code:[1,0,2,1,2,0,0,1,2,0]},
+  {name:"Sayf",desc:"攻守均衡的全能型选手，适应性极强。无论打什么 Agent、什么战术体系都能快速融入，是队伍需要弹性时最可靠的那张牌。",code:[2,2,0,2,1,1,1,0,1,0]},
+  {name:"SUYGETSU",desc:"安静、高效、致命。不靠高光片段建立声望，用稳定的 KD 和精准的出枪时机说话，是典型的\"成绩好但观众感知低\"的顶尖选手。",code:[0,1,2,1,2,0,0,1,1,2]},
+  {name:"Zekken",desc:"Sentinels 的冲击核心，NA 最稳定的 Duelist 之一。Raze / Neon 永远在冲，Masters Madrid MVP，是 NA 新生代选手眼中的学习对象。",code:[2,2,0,2,1,1,1,0,1,1]},
+  {name:"qw1",desc:"中国区的低调破局手，入场果断，不抢镜头，把精力全部用在队伍需要他的位置。典型的专业选手气质，成绩说话，不靠话题。",code:[2,2,0,2,0,1,1,0,0,0]},
+  {name:"Shao",desc:"思路阴险的战术型哨兵，用位置信息差和道具设陷阱偷走回合，对手永远不知道他藏在哪里，是 nAts 型玩法的另一种版本。",code:[0,0,2,0,2,0,0,2,1,1]},
+  {name:"KiNGG",desc:"稳定可靠的体系选手，更注重帮队伍执行战术而非个人数据，节奏稳健，不制造混乱也不依赖个人英雄主义，是团队型控场选手的代表。",code:[0,0,2,1,1,0,0,1,2,0]},
+  {name:"BuZz",desc:"T1 的全能侧翼手，能打多个位置、多种 Agent，均衡感极强，没有明显短板。不是最耀眼的那颗星，但任何阵容里都能迅速找到自己的位置。",code:[2,1,1,2,1,1,1,1,1,1]},
+  {name:"CHICHOO",desc:"EDG 世界冠军阵容的战术大脑。Controller 位看似低调，但烟雾架设、信息判断和整体节奏把控是 EDG 体系能成立的前提，沉默的幕后 GOAT。",code:[0,0,2,1,2,0,0,1,2,1]},
+  {name:"Whzy",desc:"BLG 的闪光入场手，快、准、狠三字概括，Neon 快速切入是他的招牌。中国区最具爆发力的 Duelist 之一，状态好时对任何人都是噩梦。",code:[2,1,1,2,1,1,1,1,1,0]},
+  {name:"Cryo",desc:"100 Thieves 的清醒型 Duelist，不冒险、不赌博，靠精准预瞄和稳定输出拿分。相比起激进选手，他更像一台精密运转的得分机器，不出错就是最大的贡献。",code:[2,2,0,2,0,1,2,0,0,0]},
+  {name:"SiuFatBB",desc:"Wolves 的广东仔 IGL，攻守兼备、大胆又有计算，赢了回合必 taunt 是他的标志动作。带领 Wolves 杀进 Masters Toronto 季军，是中国区走向国际的新符号。",code:[1,1,2,1,1,2,2,1,2,1]},
+  {name:"t3xture",desc:"Gen.G 的韩国 Duelist 核心，Masters Shanghai 冠军 MVP，历史 Bo5 最多击杀纪录前保持者。高强度入场、Jett / Raze 双修，状态好的时候对面基本没有正面接住他的机会。",code:[2,2,1,2,1,1,1,0,2,0]},
+  {name:"stax",desc:"T1 的接地气 IGL，带队拿下 Masters Bangkok 首个国际冠军。比赛里情绪化领导力满分；直播里被天梯气到崩溃的样子让他成为全球最受欢迎的\"真实感\"职业选手之一。",code:[1,1,2,0,1,2,2,1,1,1]},
+  {name:"yay",desc:"\"El Diablo\"，恶魔本人。Chamber 鼎盛时代统治全球的狙击手，极低鼠标感度配合手术刀般的精准，是 VCT 2022 年度最佳选手。冷静得让对手宁愿绕路也不愿意正面。",code:[0,0,1,1,2,1,1,2,2,1]},
+  {name:"Ethan",desc:"VCT 史上唯一两届世界冠军（2023 EG，2025 NRG），首位总奖金超 50 万美元的选手。NRG 的 IGL，沉稳如山，逆风越稳，Initiator 位助攻数历史第一。",code:[0,0,2,0,2,1,1,1,2,1]},
+  {name:"Jinggg",desc:"Paper Rex 的入场先锋，新加坡国宝级选手。Raze 一往无前，哪里最危险冲哪里，是 PRX\"W键打法\"最极致的体现者。服完兵役归来依然顶尖，Masters Toronto 冠军核心成员。",code:[2,2,1,2,1,1,1,0,2,0]},
+  {name:"kaajak",desc:"Fnatic 的波兰新星，2025 EMEA 四奖包揽，35.7% 残局胜率惊人。接替 Derke 出道即顶流，自述\"零压力\"打任何官赛都像打训练赛，是最不怕大场面的新生代 Duelist。",code:[2,1,1,2,2,1,1,0,2,0]},
+  {name:"ScreaM",desc:"\"爆头机器\"。从 CS:GO 传奇转型为 Valorant 顶尖选手，CSGO 历史最高爆头率纪录保持者。Karmine Corp 的灵魂，一枪一个头的打法和超高人气让他成为欧洲最具魅力的老将。",code:[2,2,1,2,1,2,2,0,2,0]},
+  {name:"jawgemo",desc:"G2 的混乱制造机，Raze 背包乱炸 + Yoru 迷惑走位让对手防不胜防。38% 残局胜率，打法不按常理出牌却屡屡奏效，是 Masters Bangkok 冠军阵容里最难被对面针对的那个人。",code:[2,2,1,2,1,1,2,0,1,2]},
+    {
+  name: "C0M",
+  desc: "NA 最冷静的战术型 Controller，EG 2023 世界冠军核心成员。Astra / Viper 道具细腻，几乎不犯错，是团队节奏的隐形指挥官。5HP 刀杀残局是他的传奇时刻，但大多数时候他选择的是最正确而非最高光的打法。",
+  code: [0, 0, 2, 0, 2, 0, 1, 2, 2, 1],
+},
+  {name:"Leo",desc:"\"沉默刺客\"。Fnatic 的隐形 MVP，Sova / Fade 道具使用炉火纯青，78% KAST 纯靠效率不靠高光。从不争头功，却是 Derke 和 Alfajer 能够为所欲为的前提。",code:[0,0,2,0,2,0,0,2,2,2]},
 ];
-
+ 
 const DIMS = ["E","R","T","M","C","S","K","P","D","G"];
-const DIM_NAMES = {
-  E:"进取性",R:"冒险度",T:"团队服从",M:"击杀风格",C:"抗压",
-  S:"存在感",K:"活跃度",P:"出手时机",D:"自律性",G:"策略倾向"
-};
-// 游戏侧权重 0.6，梗侧 0.4，按每维度归一后加权
-const WEIGHTS = [0.6,0.6,0.6,0.6,0.6, 0.4,0.4,0.4,0.4,0.4];
-
-// ── state ─────────────────────────────────────────────────────────────
+const DIM_NAMES = {E:"进取性",R:"冒险度",T:"团队服从",M:"击杀风格",C:"抗压",S:"存在感",K:"活跃度",P:"出手时机",D:"自律性",G:"策略倾向"};
+const WEIGHTS = [0.6,0.6,0.6,0.6,0.6,0.4,0.4,0.4,0.4,0.4];
+const DIM_COUNTS = {E:3,R:3,T:3,M:3,C:3,S:2,K:2,P:2,D:2,G:2};
+ 
 let order = [], cur = 0;
 const ans = new Map();
-
+let autoTimer = null;
+ 
 function shuffle(arr){
   const a=[...arr];
   for(let i=a.length-1;i>0;i--){
@@ -487,127 +369,41 @@ function shuffle(arr){
   }
   return a;
 }
-
-// ── score → level (0/1/2) ─────────────────────────────────────────────
-// 每个维度有几题：E=3, R=3, T=3, M=3, C=3, S=2, K=2, P=2, D=2, G=2
-// 最高分：3题→9分, 2题→6分
-// 按比例分三档
+ 
 function toLevel(score, maxScore){
   if(score <= maxScore/3) return 0;
   if(score <= maxScore*2/3) return 1;
   return 2;
 }
-
-const DIM_COUNTS = {E:3,R:3,T:3,M:3,C:3, S:2,K:2,P:2,D:2,G:2};
-
+ 
 function calcResults(){
-  // 累加各维度原始分
   const raw = {};
   DIMS.forEach(d=>raw[d]=0);
-  order.forEach(q=>{
-    raw[q.dim] += (ans.get(q.id) ?? 0);
-  });
-  // 转 level
+  order.forEach(q=>{ raw[q.dim] += (ans.get(q.id) ?? 0); });
   const userCode = DIMS.map(d => toLevel(raw[d], DIM_COUNTS[d]*3));
-
-  // 加权曼哈顿距离
   let best = null, bestDist = Infinity;
   PLAYERS.forEach(p=>{
     let dist = 0;
     userCode.forEach((v,i)=> dist += WEIGHTS[i]*Math.abs(v - p.code[i]));
     if(dist < bestDist){bestDist=dist; best=p;}
   });
-
-  // 最大可能距离（每维度最大差2，权重加权）
   const maxDist = WEIGHTS.reduce((s,w)=>s+w*2, 0);
   const pct = Math.round((1 - bestDist/maxDist)*100);
-
   return {player: best, pct, userCode};
 }
-
-// ── render ─────────────────────────────────────────────────────────────
+ 
 function updateProgress(){
   const n = order.length;
-  const answered = Math.min(ans.size, n);
-  const p = Math.round((answered / n) * 100);
+  const p = Math.round((ans.size / n) * 100);
   document.getElementById('prog-pct').textContent = p+'%';
   document.getElementById('prog-fill').style.width = p+'%';
 }
-
-function render(){
-  const q = order[cur];
-  const n = order.length;
-
-  document.getElementById('prog-txt').textContent = `第 ${cur+1} / ${n} 题`;
-  updateProgress();
-
-  document.getElementById('q-num').textContent = 'Q'+(cur+1<10?'0':'')+(cur+1);
-  document.getElementById('q-text').textContent = q.text;
-
-  const sel = ans.get(q.id) ?? -1;
-  const optsEl = document.getElementById('opts');
-  optsEl.innerHTML = q.opts.map((o,i)=>`
-    <div class="opt${sel===i?' sel':''}" data-val="${i}">
-      <div class="opt-letter">${String.fromCharCode(65+i)}</div>
-      <div class="opt-txt">${o}</div>
-    </div>
-  `).join('');
-
-  optsEl.querySelectorAll('.opt').forEach(el=>{
-    el.addEventListener('click',()=>{
-      ans.set(q.id, +el.dataset.val);
-      optsEl.querySelectorAll('.opt').forEach(e=>e.classList.remove('sel'));
-      el.classList.add('sel');
-      updateProgress();
-    });
-  });
-
-  document.getElementById('prev-btn').disabled = cur===0;
-  document.getElementById('next-btn').textContent = cur===n-1 ? '查看结果' : '下一题';
-}
-
-function showResult(){
-  const {player, pct, userCode} = calcResults();
-
-  document.getElementById('q-wrap').style.display='none';
-  const progWrap = document.querySelector('.prog-wrap');
-  if (progWrap) progWrap.style.opacity = '0.3';
-
-  document.getElementById('res-name').textContent = player.name;
-  document.getElementById('res-pct').textContent = pct+'%';
-  document.getElementById('res-desc').textContent = player.desc || '';
-
-  // bar animates after paint
-  setTimeout(()=>{
-    document.getElementById('res-bar').style.width = pct+'%';
-  }, 50);
-
-  // dim breakdown
-  const dimsEl = document.getElementById('res-dims');
-  const lvlLabel = ['低','中','高'];
-  dimsEl.innerHTML = DIMS.map((d,i)=>`
-    <div class="dim-cell">
-      <div class="dim-cell-label">${DIM_NAMES[d]}</div>
-      <div class="dim-cell-val">你 <b>${lvlLabel[userCode[i]]}</b> · ${player.name} <b>${lvlLabel[player.code[i]]}</b></div>
-    </div>
-  `).join('');
-
-  document.getElementById('result').classList.add('show');
-  document.getElementById('next-btn').style.display='none';
-  document.getElementById('prev-btn').style.display='none';
-  document.getElementById('result').scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-
-function handleNext(){
-  const q = order[cur];
-  if(!ans.has(q.id)){
-    // shake hint
-    const wrap = document.getElementById('q-wrap');
-    wrap.style.transform='translateX(6px)';
-    setTimeout(()=>wrap.style.transform='',200);
+ 
+function advance(){
+  if(cur === order.length-1){
+    showResult();
     return;
   }
-  if(cur === order.length-1){ showResult(); return; }
   const wrap = document.getElementById('q-wrap');
   wrap.classList.add('fade-out');
   setTimeout(()=>{
@@ -616,35 +412,99 @@ function handleNext(){
     wrap.classList.remove('fade-out');
   },180);
 }
-
+ 
+function render(){
+  const q = order[cur];
+  const n = order.length;
+  document.getElementById('prog-txt').textContent = `第 ${cur+1} / ${n} 题`;
+  updateProgress();
+  document.getElementById('q-num').textContent = 'Q'+(cur+1<10?'0':'')+(cur+1);
+  document.getElementById('q-text').textContent = q.text;
+ 
+  const sel = ans.get(q.id) ?? -1;
+  const optsEl = document.getElementById('opts');
+  optsEl.classList.remove('locked');
+  optsEl.innerHTML = q.opts.map((o,i)=>`
+    <div class="opt${sel===i?' sel':''}" data-val="${i}">
+      <div class="opt-letter">${String.fromCharCode(65+i)}</div>
+      <div class="opt-txt">${o}</div>
+    </div>
+  `).join('');
+ 
+  // 如果已有答案，锁定选项防止重复点击
+  if(sel !== -1) optsEl.classList.add('locked');
+ 
+  const hintEl = document.getElementById('auto-hint');
+  hintEl.textContent = '';
+ 
+  optsEl.querySelectorAll('.opt').forEach(el=>{
+    el.addEventListener('click',()=>{
+      if(autoTimer) clearTimeout(autoTimer);
+ 
+      ans.set(q.id, +el.dataset.val);
+      optsEl.querySelectorAll('.opt').forEach(e=>e.classList.remove('sel'));
+      el.classList.add('sel');
+      optsEl.classList.add('locked');
+      updateProgress();
+ 
+      const isLast = cur === order.length - 1;
+      hintEl.textContent = isLast ? '正在计算结果…' : '即将跳到下一题…';
+ 
+      autoTimer = setTimeout(()=>{
+        hintEl.textContent = '';
+        advance();
+      }, 100);
+    });
+  });
+ 
+  document.getElementById('prev-btn').disabled = cur===0;
+}
+ 
+function showResult(){
+  const {player, pct, userCode} = calcResults();
+  document.getElementById('q-wrap').style.display='none';
+  document.querySelector('.prog-wrap').style.opacity='0.3';
+  document.getElementById('res-name').textContent = player.name;
+  document.getElementById('res-pct').textContent = pct+'%';
+  document.getElementById('res-desc').textContent = player.desc || '';
+  setTimeout(()=>{ document.getElementById('res-bar').style.width = pct+'%'; }, 50);
+  const dimsEl = document.getElementById('res-dims');
+  const lvlLabel = ['低','中','高'];
+  dimsEl.innerHTML = DIMS.map((d,i)=>`
+    <div class="dim-cell">
+      <div class="dim-cell-label">${DIM_NAMES[d]}</div>
+      <div class="dim-cell-val">你 <b>${lvlLabel[userCode[i]]}</b> · ${player.name} <b>${lvlLabel[player.code[i]]}</b></div>
+    </div>
+  `).join('');
+  document.getElementById('result').classList.add('show');
+  document.getElementById('prev-btn').style.display='none';
+  document.getElementById('result').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+ 
 function handlePrev(){
   if(cur===0) return;
+  if(autoTimer){ clearTimeout(autoTimer); autoTimer=null; }
+  document.getElementById('auto-hint').textContent = '';
   const wrap = document.getElementById('q-wrap');
   wrap.classList.add('fade-out');
-  setTimeout(()=>{
-    cur--;
-    render();
-    wrap.classList.remove('fade-out');
-  },180);
+  setTimeout(()=>{ cur--; render(); wrap.classList.remove('fade-out'); },180);
 }
-
+ 
 function init(){
+  if(autoTimer){ clearTimeout(autoTimer); autoTimer=null; }
   order = shuffle(QUESTIONS);
   cur = 0;
   ans.clear();
   document.getElementById('q-wrap').style.display='';
   document.querySelector('.prog-wrap').style.opacity='1';
   document.getElementById('result').classList.remove('show');
-  document.getElementById('next-btn').style.display='';
   document.getElementById('prev-btn').style.display='';
   render();
 }
-
-document.getElementById('next-btn').addEventListener('click', handleNext);
+ 
 document.getElementById('prev-btn').addEventListener('click', handlePrev);
 document.getElementById('reset-btn').addEventListener('click', init);
-
+ 
 init();
 </script>
 </body>
-</html>
